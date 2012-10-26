@@ -3,49 +3,36 @@
         var self = this;
         var init = function () {
             //add the textbox
-            $('<div/>').addClass("displayContainer").appendTo(self);
-            $('<input/>').attr({id:'display',type:'input',disabled:'disabled'}).appendTo($('#calculator .displayContainer'));
+            $('<input/>').attr({id:'display',type:'input',disabled:'disabled',value:'88888888888.'}).appendTo(self);
+            $('<br/>').appendTo(self);
 
-
-
-            //Add the buttons for 1 to 9
-            $('<div/>').addClass("numbersContainer").appendTo(self);
-            var num = 7;
-            for (var i = 0; i < 3; i++) {
-                for (var j = 0; j < 3; j++) {
-                    $('<input/>')
-                        .attr({'id':num, 'type':'button', 'value':num})
-                        .addClass('regularSize')
-                        .appendTo($('#calculator .numbersContainer'));
-                    num++;
-                }
-                //$('<div class="clear"></div>').appendTo($('.numbersContainer'));
-                num = num - 6;
-            }
-
-            //put 0 and . buttons in numbercontainer
-            $('<input/>')
-                .attr({type:'button', id:'0', value:'0'})
-                .appendTo($('#calculator .numbersContainer'));
-            $('<input/>')
-                .attr({type:'button', id:'dot', value:'.'})
-                .addClass('regularSize')
-                .appendTo($('#calculator .numbersContainer'));
-
-            //add the +-/* buttons
-            $('<div/>').addClass("operatorsContainer").appendTo(self);
-            var operators = [
-                {id:'divide', value:'/'},
-                {id:'multiply', value:'*'},
-                {id:'subtract', value:'-'},
-                {id:'add', value:'+'}
-
+            var buttons = [
+                {id:'seven',value:'7',type:'button', classs:'reg'},
+                {id:'eight',value:'8',type:'button', classs:'reg'},
+                {id:'nine',value:'9',type:'button', classs:'reg'},
+                {id:'divide',value:'/',type:'button', classs:'reg'},
+                {id:'four',value:'4',type:'button', classs:'reg'},
+                {id:'five',value:'5',type:'button', classs:'reg'},
+                {id:'six',value:'6',type:'button', classs:'reg'},
+                {id:'multiply',value:'*',type:'button', classs:'reg'},
+                {id:'one',value:'1',type:'button', classs:'reg'},
+                {id:'two',value:'2',type:'button', classs:'reg'},
+                {id:'three',value:'3',type:'button', classs:'reg'},
+                {id:'subtract',value:'-',type:'button', classs:'reg'},
+                {id:'zero',value:'0',type:'button', classs:'notreg'},
+                {id:'dot',value:'.',type:'button', classs:'reg'},
+                {id:'add',value:'+',type:'button', classs:'reg'}
             ];
-            for(var i=0; i<operators.length; i++){
+
+            for(var i = 0; i < buttons.length; i++){
                 $('<input/>')
-                    .attr({type:'button', id:operators[i].id, value:operators[i].value})
-                    .appendTo($('#calculator .operatorsContainer'));
+                    .attr({type:buttons[i].type, id:buttons[i].id, value:buttons[i].value}).addClass(buttons[i].classs)
+                    .appendTo(self);
+                if((i+1)%4 == 0){
+                    $('<br/>').appendTo(self);
+                }
             }
+
         }
 
         init();

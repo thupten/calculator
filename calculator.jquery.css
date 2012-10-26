@@ -3,15 +3,8 @@
 }
 
 #calculator{
-    padding:5px;
     width:200px;
     background-color:#ccc;
-}
-
-.displayContainer,
-.numbersContainer,
-.operatorsContainer{
-    display: inline-block;
 }
 
 
@@ -20,29 +13,18 @@
     color:white;
 }
 
-#calculator .numbersContainer .regularSize,
-#calculator .operatorsContainer input{
+#calculator input.reg{
     width:50px;
     height:50px;
 }
 
-#calculator .operatorsContainer #0{
+#calculator input.notreg{
     width:100px;
     height:50px;
 }
 
-
 #display{
     width:200px;
     border:1px solid #99cc55;
-}
-
-.numbersContainer{
-    width:150px;
-}
-
-
-
-.operatorsContainer input{
-   display:block;
+    text-align: right;
 }
