@@ -25,9 +25,11 @@ if buttonPressed is number
 
 if buttonPressed is operation
     if its first time operation pressed
+        save to x;
         change operation to operation pressed
     if its not first time operation pressed
-        calculate(x,y,operation) the result
+        save to y
+        calculate(z,y,operation) the result
         save the result
         display the result
 
@@ -45,5 +47,21 @@ if buttonPressed is clear
 
 
 ---recursively
+0
+2
++
+2
+=
+4
+
 n = calculate(n, n1, operation);
-memory = [{n:'0', n1:'10', operation:'add'},...]
+memory = [
+        {n:'0', n1:'0', operation:'none', result:'0'},
+        {n:'0', n1:'5', operation:'add', result:'5'},
+        {n:'5', n1:'10', operation:'multiply', result:'50'},
+        {n:'0', n1:'0', operation:'none'},
+        {n:'0', n1:'0', operation:'none'},
+        {n:'0', n1:'0', operation:'none'},
+        {n:'0', n1:'0', operation:'none'},
+        {n:'0', n1:'0', operation:'none'}
+        ]

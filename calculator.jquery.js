@@ -1,39 +1,41 @@
 (function ($) {
     $.fn.calculator = function () {
         var self = this;
-        var memory = [{n:'0',n1:'0', operation:'none'}];
+        /**
+         * operation: 'number' || 'add' ||'subtract' ||'multiply' || 'divide' || 'equal' || 'none'
+         */
+        var transactions = [
+            {n:'', operation:'none', result:'0'}
+        ];
+
+        var lastButton = {button:'none', buttonType:'none'};
 
 
         function calculate(number1, number2, operation) {
-            var num1 = number1;
-            var num2 = number2;
+            var num1 = new Number(number1);
+            var num2 = new Number(number2);
 
             var ret = 0;
-            if (operation === undefined) {
+            if (operation === 'none') {
                 return number1;
             } else if (operation == 'add') {
-                console.log('calculating ' + number1 + ' ' + number2 + ' with ' + operation)
                 ret = num1 + num2;
             }
             else if (operation == 'subtract') {
-                console.log('calculating ' + number1 + ' ' + number2 + ' with ' + operation)
                 ret = num1 - num2;
             }
             else if (operation == 'multiply') {
-                console.log('calculating ' + number1 + ' ' + number2 + ' with ' + operation)
                 ret = num1 * num2;
             }
             else if (operation == 'divide') {
-                console.log('calculating ' + number1 + ' ' + number2 + ' with ' + operation)
                 ret = num1 / num2;
             }
-            console.log(ret);
             return ret;
         }
 
         function displayCalculator() {
             //add the textbox
-            $('<input/>').attr({id:'display', type:'text', value:'0',maxLength:11}).appendTo(self);
+            $('<input/>').attr({id:'display', type:'text', value:'0', maxLength:11}).appendTo(self);
             $('<br/>').appendTo(self);
 
             var buttons = [
@@ -66,48 +68,87 @@
         }
 
         var init = function () {
-            $('#calculator input').click(function () {
+            $('#calculator input').bind('click', function () {
                 var buttonPressed = this.id;
-                switch(buttonPressed){
-                    case 'divide': case 'multiply': case 'add': case 'subtract':
-                        //do something
-                        operation = buttonPressed;
-                        break;
+                switch (buttonPressed) {
+                    case 'divide':
+                    case 'multiply':
+                    case 'add':
+                    case 'subtract':
                     case 'equal':
                         //do something
-                        break;
-                    case '0':case '1':case '2':case '3':case '4':case '5':case '6':case '7':case '8':case '9':
-                        //do something
-                        if(operation == undefined)
-                        break;
+                        //calculate and save transaction.
+                        var displayedNumber = $('#display').val();
 
-                }
-                if ((this.id == 'divide') || (this.id == 'multiply') ||
-                    (this.id == 'add') || (this.id == 'subtract') || (this.id == 'equal')) {
-                    num = $('#display').val();
-                    operation = this.id;
-                    if (this.id == 'equal') {
-                        num = calculate(num, $('#display').val(), operation);
-                        $('#display').val(num);
-                        console.log('equal pressed');
-                        operation = undefined;
-                    }
-                } else {
-                    console.log('a number key was press. check if operation is null, keep concatenating, other wise write a new number.' + operation);
-                    if (operation === undefined) {
-                        if ($('#display').val() == '0') {
-                            $('#display').val(this.value);
-                        } else {
-                            $('#display').val($('#display').val() + this.value);
+                        var pastOperations = _(transactions).filter(function(transaction){
+                            return ((transaction.operation == 'add' ||transaction.operation == 'subtract' ||
+                                    transaction.operation == 'multiply' ||transaction.operation == 'divide'
+                                    ||transaction.operation == 'equal'));
+                        });
+
+
+
+                        //if first time operation key is pressed
+                        if (pastOperations.length <= 0) {
+                            //console.log('first time add subtract multiply or divide');
+                            if (buttonPressed == 'equal') {
+                                buttonPressed = 'none';
+                            }
+                            transactions.push({n:displayedNumber, operation:buttonPressed, result:displayedNumber});
                         }
+                        if (pastOperations.length > 0) {
+                            var lastTransaction = _(transactions).last();
+                            if (buttonPressed == 'equal') {
+                                buttonPressed = lastTransaction.operation;
+                            }
 
-                    }else{
+                            var result = calculate(lastTransaction.result, displayedNumber, lastTransaction.operation);
+                            transactions.push({n:displayedNumber, operation:buttonPressed, result:result});
+                            $('#display').val(result);
+                        }
+                        break;
+                    case 'one':
+                    case 'two':
+                    case 'three':
+                    case 'four':
+                    case 'five':
+                    case 'six':
+                    case 'seven':
+                    case 'eight':
+                    case 'nine':
+                    case 'zero':
+                    case 'dot':
+                        //do something
+                        if (lastButton.buttonType == 'number' || lastButton.buttonType == 'none') {
+                            var prevDisplayContent = $('#display').val();
+                            if (prevDisplayContent == '0') {
+                                prevDisplayContent = '';
+                            }
+                            var newDisplayContent = prevDisplayContent + this.value;
+                            $('#display').val(newDisplayContent);
+                        } else if (lastButton.buttonType == 'operation') {
+                            $('#display').val('');
+                            $('#display').val(this.value);
 
-                        $('#display').val($('#display').val() + this.value);
-                    }
+                        }
+                        break;
                 }
-                console.log(operation);
             });
+
+            //set the lastButton.
+            $('#calculator input').bind('click', function () {
+                lastButton.button = this.id;
+                if (this.id == 'one' || this.id == 'two' || this.id == 'three' || this.id == 'four' || this.id == 'five' ||
+                    this.id == 'nine' || this.id == 'eight' || this.id == 'seven' || this.id == 'six' || this.id == 'zero' || this.id == 'dot') {
+                    lastButton.buttonType = 'number';
+                }
+                if (this.id == 'equal' || this.id == 'add' || this.id == 'subtract' || this.id == 'divide' || this.id == 'multiply') {
+                    lastButton.buttonType = 'operation';
+                    console.log(_(transactions).last().n  +' ' + _(transactions).last().result+' '+ _(transactions).last().operation);
+                }
+
+            });
+
         };
 
 
