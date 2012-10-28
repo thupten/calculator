@@ -15,4 +15,35 @@ when operation key presesd for 2nd or more, calculate the result and store the r
 dispValue = 0;
 resultValue = undefined;
 
-if(this.value == number)
+if buttonPressed is number
+   if(previous button was nothing or a number button)
+        concatenate to number displayed, we will take care removing the preceding zero with regex.
+   else if(previous button was a equal or operation)
+        save the displayed number
+        clear the display
+        write the number on display
+
+if buttonPressed is operation
+    if its first time operation pressed
+        change operation to operation pressed
+    if its not first time operation pressed
+        calculate(x,y,operation) the result
+        save the result
+        display the result
+
+if buttonPressed is equal
+    if operation is something
+        calculate(x,y,operation)
+        save the result
+        display the result
+    else
+        do nothing
+
+if buttonPressed is clear
+    empty the result, empty the operation
+    change display to 0
+
+
+---recursively
+n = calculate(n, n1, operation);
+memory = [{n:'0', n1:'10', operation:'add'},...]

@@ -1,8 +1,7 @@
 (function ($) {
     $.fn.calculator = function () {
         var self = this;
-        var operation = undefined;
-        var num = 0;
+        var memory = [{n:'0',n1:'0', operation:'none'}];
 
 
         function calculate(number1, number2, operation) {
@@ -67,8 +66,22 @@
         }
 
         var init = function () {
-
             $('#calculator input').click(function () {
+                var buttonPressed = this.id;
+                switch(buttonPressed){
+                    case 'divide': case 'multiply': case 'add': case 'subtract':
+                        //do something
+                        operation = buttonPressed;
+                        break;
+                    case 'equal':
+                        //do something
+                        break;
+                    case '0':case '1':case '2':case '3':case '4':case '5':case '6':case '7':case '8':case '9':
+                        //do something
+                        if(operation == undefined)
+                        break;
+
+                }
                 if ((this.id == 'divide') || (this.id == 'multiply') ||
                     (this.id == 'add') || (this.id == 'subtract') || (this.id == 'equal')) {
                     num = $('#display').val();
