@@ -1,0 +1,18 @@
+calc start with 0 on display
+
+when first num key pressed, 0 replaced.
+until an operation key is pressed keep adding new keys to the right
+
+when operation key pressed, set operation.
+the next key will reset the display and display new key until equal or an operation key is pressed
+
+
+if operation pressed for the first time, store the current number in temp
+when operation key presesd for 2nd or more, calculate the result and store the result in temp
+
+
+
+dispValue = 0;
+resultValue = undefined;
+
+if(this.value == number)

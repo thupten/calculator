@@ -10,7 +10,7 @@
 
 #calculator input{
     font-size:30px;
-    color:white;
+    color:#666;
 }
 
 #calculator input.reg{
@@ -24,7 +24,7 @@
 }
 
 #display{
-    width:200px;
-    border:1px solid #99cc55;
+    /*width:200px;
+    border:1px solid #99cc55;*/
     text-align: right;
 }
