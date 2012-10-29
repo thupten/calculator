@@ -4,12 +4,8 @@
         /**
          * operation: 'number' || 'add' ||'subtract' ||'multiply' || 'divide' || 'equal' || 'none'
          */
-        var transactions = [
-            {n:'', operation:'none', result:'0'}
-        ];
 
-        var lastButton = {button:'none', buttonType:'none'};
-
+        var newTransaction = false;
 
         function calculate(expressionInString) {
             //if expression ends with
@@ -61,6 +57,7 @@
                         //evaluate the expression
                         var result = calculate(prevDisplayContent);
                         $('#display').val(result);
+                        newTransaction = true;
                         break;
                     case '1':
                     case '2':
@@ -78,14 +75,22 @@
                     case '+':
                     case '-':
                         //do something
-                        var prevDisplayContent = $('#display').val();
+                        var prevDisplayContent;
+                        if(newTransaction == true){
+                            prevDisplayContent = '';
+                        }else{
+                           prevDisplayContent = $('#display').val();
+                        }
                         var newDisplayContent = prevDisplayContent + this.value;
                         $('#display').val(newDisplayContent);
+                        newTransaction = false;
                         break;
                 }
             });
 
-
+            $('#calculator input').click(function () {
+                $('#display').focus();
+            });
             $('#calculator #display').keypress(function (e) {
                 var keyPressed;
                 if(e.keyCode == 13){
@@ -99,7 +104,7 @@
                     keyPressed = String.fromCharCode(e.keyCode);
                 }
                 var $buttonToHighlight = 'input[value="' + keyPressed + '"]';
-                var $button = $('#calculator').find($buttonToHighlight).fadeOut(200).fadeIn(200);
+                var $button = $('#calculator').find($buttonToHighlight).fadeOut(100).fadeIn(100);
 
                 var displayContent = $('#display').val();
                 //remove leading zero,divide and multiply
@@ -118,6 +123,7 @@
         displayCalculator();
         init();
         $('#display').focus();
+        return this;
     };
 })
     (jQuery);
