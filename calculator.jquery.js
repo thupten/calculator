@@ -11,26 +11,10 @@
         var lastButton = {button:'none', buttonType:'none'};
 
 
-        function calculate(number1, number2, operation) {
-            var num1 = new Number(number1);
-            var num2 = new Number(number2);
-
-            var ret = 0;
-            if (operation === 'none') {
-                return number1;
-            } else if (operation == 'add') {
-                ret = num1 + num2;
-            }
-            else if (operation == 'subtract') {
-                ret = num1 - num2;
-            }
-            else if (operation == 'multiply') {
-                ret = num1 * num2;
-            }
-            else if (operation == 'divide') {
-                ret = num1 / num2;
-            }
-            return ret;
+        function calculate(expressionInString) {
+            //if expression ends with
+            return eval(expressionInString);
+            //return ret;
         }
 
         function displayCalculator() {
@@ -67,93 +51,73 @@
             }
         }
 
+
         var init = function () {
             $('#calculator input').bind('click', function () {
-                var buttonPressed = this.id;
+                var buttonPressed = this.value;
                 switch (buttonPressed) {
-                    case 'divide':
-                    case 'multiply':
-                    case 'add':
-                    case 'subtract':
-                    case 'equal':
-                        //do something
-                        //calculate and save transaction.
-                        var displayedNumber = $('#display').val();
-
-                        var pastOperations = _(transactions).filter(function(transaction){
-                            return ((transaction.operation == 'add' ||transaction.operation == 'subtract' ||
-                                    transaction.operation == 'multiply' ||transaction.operation == 'divide'
-                                    ||transaction.operation == 'equal'));
-                        });
-
-
-
-                        //if first time operation key is pressed
-                        if (pastOperations.length <= 0) {
-                            //console.log('first time add subtract multiply or divide');
-                            if (buttonPressed == 'equal') {
-                                buttonPressed = 'none';
-                            }
-                            transactions.push({n:displayedNumber, operation:buttonPressed, result:displayedNumber});
-                        }
-                        if (pastOperations.length > 0) {
-                            var lastTransaction = _(transactions).last();
-                            if (buttonPressed == 'equal') {
-                                buttonPressed = lastTransaction.operation;
-                            }
-
-                            var result = calculate(lastTransaction.result, displayedNumber, lastTransaction.operation);
-                            transactions.push({n:displayedNumber, operation:buttonPressed, result:result});
-                            $('#display').val(result);
-                        }
+                    case '=':
+                        var prevDisplayContent = $('#display').val();
+                        //evaluate the expression
+                        var result = calculate(prevDisplayContent);
+                        $('#display').val(result);
                         break;
-                    case 'one':
-                    case 'two':
-                    case 'three':
-                    case 'four':
-                    case 'five':
-                    case 'six':
-                    case 'seven':
-                    case 'eight':
-                    case 'nine':
-                    case 'zero':
-                    case 'dot':
+                    case '1':
+                    case '2':
+                    case '3':
+                    case '4':
+                    case '5':
+                    case '6':
+                    case '7':
+                    case '8':
+                    case '9':
+                    case '0':
+                    case '.':
+                    case '/':
+                    case '*':
+                    case '+':
+                    case '-':
                         //do something
-                        if (lastButton.buttonType == 'number' || lastButton.buttonType == 'none') {
-                            var prevDisplayContent = $('#display').val();
-                            if (prevDisplayContent == '0') {
-                                prevDisplayContent = '';
-                            }
-                            var newDisplayContent = prevDisplayContent + this.value;
-                            $('#display').val(newDisplayContent);
-                        } else if (lastButton.buttonType == 'operation') {
-                            $('#display').val('');
-                            $('#display').val(this.value);
-
-                        }
+                        var prevDisplayContent = $('#display').val();
+                        var newDisplayContent = prevDisplayContent + this.value;
+                        $('#display').val(newDisplayContent);
                         break;
                 }
             });
 
-            //set the lastButton.
-            $('#calculator input').bind('click', function () {
-                lastButton.button = this.id;
-                if (this.id == 'one' || this.id == 'two' || this.id == 'three' || this.id == 'four' || this.id == 'five' ||
-                    this.id == 'nine' || this.id == 'eight' || this.id == 'seven' || this.id == 'six' || this.id == 'zero' || this.id == 'dot') {
-                    lastButton.buttonType = 'number';
-                }
-                if (this.id == 'equal' || this.id == 'add' || this.id == 'subtract' || this.id == 'divide' || this.id == 'multiply') {
-                    lastButton.buttonType = 'operation';
-                    console.log(_(transactions).last().n  +' ' + _(transactions).last().result+' '+ _(transactions).last().operation);
-                }
 
+            $('#calculator #display').keypress(function (e) {
+                var keyPressed;
+                if(e.keyCode == 13){
+                    //enter pressed
+                    keyPressed = '=';
+                    var prevDisplayContent = $('#display').val();
+                    //evaluate the expression
+                    var result = calculate(prevDisplayContent);
+                    $('#display').val(result);
+                }else{
+                    keyPressed = String.fromCharCode(e.keyCode);
+                }
+                var $buttonToHighlight = 'input[value="' + keyPressed + '"]';
+                var $button = $('#calculator').find($buttonToHighlight).fadeOut(200).fadeIn(200);
+
+                var displayContent = $('#display').val();
+                //remove leading zero,divide and multiply
+                displayContent = displayContent.replace(new RegExp('^0|^=$|^\\/$|^\\*$'), '');
+                //remove double operator
+                displayContent = displayContent.replace(new RegExp('([/*+])+'), '$1');
+                //remove double - sign
+                displayContent = displayContent.replace(new RegExp('(-)+'), '$1');
+                $('#display').val(displayContent);
             });
+
 
         };
 
 
         displayCalculator();
         init();
+        $('#display').focus();
     };
 })
     (jQuery);
