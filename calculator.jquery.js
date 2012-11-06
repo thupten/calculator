@@ -1,12 +1,13 @@
 (function ($) {
     $.fn.calculator = function () {
         var self = this;
+        var MAX_DIGIT = 16;
 
         var buttons = [
-            {id:'escape', value:'AC', type:'button', classs:'func', keyWhich:0},
-            {id:'reverseSign', value:'+/-', type:'button', classs:'func', keyWhich:null},
+            {id:'escape', value:'AC', type:'button', classs:'func', keyCode:27, title:'Esc'},
+            {id:'square', value:'Sq', type:'button', classs:'func', keyWhich:null},
             {id:'squareRoot', value:'SqRt', type:'button', classs:'func', keyWhich:null},
-            {id:'back', value:'<-', type:'button', classs:'func', keyWhich:8},
+            {id:'back', value:'<-', type:'button', classs:'func', keyWhich:8, title:'Backspace'},
 
             {id:'seven', value:'7', type:'button', classs:'reg', keyWhich:55},
             {id:'eight', value:'8', type:'button', classs:'reg', keyWhich:56},
@@ -29,19 +30,38 @@
             {id:'add', value:'+', type:'button', classs:'reg', keyWhich:43}
         ];
 
+        function trimNumber(expressionInString){
+            var zerosInFront = new RegExp('^0+');
+            var ret;
+            ret = expressionInString.replace(zerosInFront, '');
+            ret.toFixed(2);
+            return ret;
+        }
 
         function calculate(expressionInString) {
-            //if expression ends with
-            return eval(expressionInString);
-            //return ret;
+            //if expression ends with + - / *, remove it
+            var lastOperatorRegex = new RegExp('[+-/*]$');
+
+            console.log(expressionInString);
+            expressionInString = expressionInString.replace(lastOperatorRegex, '');
+            var result = eval(expressionInString);
+            
+            return ;
         }
 
         function displayCalculator() {
             //add the textbox
-            $('<input/>').attr({id:'lcdDisplay',
+            $('<input/>').attr({id:'lcdTopDisplay',
+                type:'text',
+                value:'',
+                maxLength:MAX_DIGIT,
+                readOnly:'readonly'}).
+                appendTo(self);
+            $('<br/>').appendTo(self);
+            $('<input/>').attr({id:'lcdBottomDisplay',
                 type:'text',
                 value:'0',
-                maxLength:11,
+                maxLength:MAX_DIGIT,
                 readOnly:'readonly'}).
                 appendTo(self);
             $('<br/>').appendTo(self);
@@ -50,7 +70,8 @@
                 $('<input/>')
                     .attr({ type:buttons[i].type,
                         id:buttons[i].id,
-                        value:buttons[i].value})
+                        value:buttons[i].value,
+                        title:buttons[i].title})
                     .addClass(buttons[i].classs)
                     .appendTo(self);
                 if ((i + 1) % 4 == 0) {
@@ -60,13 +81,15 @@
         }
 
         function handleButtonPressed(buttonObject) {
-            var prevDisplayContent = $('#lcdDisplay').val();
-            var newDisplayContent = '';
+            var currentTopDisplayContent = $('#lcdTopDisplay').val();
+            var currentBottomDisplayContent = $('#lcdBottomDisplay').val();
+            var newTopDisplayContent, newBottomDisplayContent = '';
             var newTransaction = false;
             switch (buttonObject.value) {
                 case '=':
                     //evaluate the expression
-                    newDisplayContent = calculate(prevDisplayContent);
+                    newBottomDisplayContent = calculate(currentTopDisplayContent);
+                    newTopDisplayContent = '';
                     newTransaction = true;
                     break;
                 case '1':
@@ -79,23 +102,70 @@
                 case '8':
                 case '9':
                 case '0':
-                    if (newTransaction == true) {
-                        prevDisplayContent = '';
+                    if (currentBottomDisplayContent.length >= MAX_DIGIT) {
+                        newBottomDisplayContent = currentBottomDisplayContent;
+                        $('#lcdBottomDisplay').fadeOut(10,function () {
+                            $(this).css('background-color', 'red');
+                        }).fadeIn(50, function () {
+                                $(this).css('background-color', 'white');
+                            });
+                        break;
                     }
-                    newDisplayContent = prevDisplayContent + buttonObject.value;
+                    if (newTransaction == true) {
+                        currentTopDisplayContent = '';
+                    }
+                    if (currentBottomDisplayContent == '0') {
+                        newBottomDisplayContent = buttonObject.value;
+                    } else {
+                        newTopDisplayContent = currentTopDisplayContent;
+                        newBottomDisplayContent = currentBottomDisplayContent + buttonObject.value;
+                    }
                     break;
                 case '.':
-                case '/':
-                case '*':
-                case '+':
-                case '-':
-                    newDisplayContent = prevDisplayContent + buttonObject.value;
+                    newBottomDisplayContent = currentBottomDisplayContent + buttonObject.value;
                     break;
-                case '+/-':
+                case '/':
+                    console.log(currentTopDisplayContent);
+                    console.log(currentBottomDisplayContent);
+                    console.log(buttonObject.value);
+                    newTopDisplayContent = currentTopDisplayContent + currentBottomDisplayContent + buttonObject.value;
+                    newBottomDisplayContent = calculate(newTopDisplayContent);
+                    break;
+                case '*':
+                    newTopDisplayContent = currentTopDisplayContent + currentBottomDisplayContent + buttonObject.value;
+                    newBottomDisplayContent = calculate(newTopDisplayContent);
+                    break;
+                case '+':
+                    newTopDisplayContent = currentTopDisplayContent + currentBottomDisplayContent + buttonObject.value;
+                    newBottomDisplayContent = calculate(newTopDisplayContent);
+                    break;
+                case '-':
+                    newTopDisplayContent = currentTopDisplayContent + currentBottomDisplayContent + buttonObject.value;
+                    newBottomDisplayContent = calculate(newTopDisplayContent);
+                    break;
+                case '<-':
+                    //BACK button pressed, remove a char from right
+                    var lastDigitRegex = new RegExp('\\d\\D*$');
+                    newBottomDisplayContent = currentBottomDisplayContent.replace(lastDigitRegex, '');
+                    break;
+                case 'AC':
+                    newTopDisplayContent = '';
+                    newBottomDisplayContent = '0';
+                    break;
+                case 'Sq':
+                    newBottomDisplayContent = currentBottomDisplayContent * currentBottomDisplayContent;
+                    newTopDisplayContent = 'Square('+ currentTopDisplayContent +')';
+                    break;
+                case 'SqRt':
+                    newBottomDisplayContent = Math.sqrt(currentBottomDisplayContent);
+                    break;
+                default:
+                    console.log('invalid key');
             }
             var $buttonToHighlight = 'input[value="' + buttonObject.value + '"]';
-            var $button = $('#calculator').find($buttonToHighlight).fadeOut(100).fadeIn(100);
-            $('#lcdDisplay').val(newDisplayContent);
+            var $button = $('#calculator').find($buttonToHighlight).fadeOut(20).fadeIn(20);
+            $('#lcdTopDisplay').val(newTopDisplayContent);
+            $('#lcdBottomDisplay').val(newBottomDisplayContent);
         }
 
         var init = function () {
@@ -105,27 +175,40 @@
                 var buttonPressed = _.find(buttons, function (button) {
                     return button.value == valueOfKeyPressed;
                 });
-                handleButtonPressed(buttonPressed);
+                if (buttonPressed != undefined) {
+                    handleButtonPressed(buttonPressed);
+                }
             });
 
             //any time a button is pressed, change the focus back to the lcd display
             $('#calculator input').bind('click', function () {
-                $('#lcdDisplay').focus();
+                $('#lcdTopDisplay').focus();
             });
 
             $('#calculator input').keypress(function (e) {
-                var buttonPressed = _.find(buttons, function (button) {
-                    return button.keyWhich == e.which;
-                });
-                handleButtonPressed(buttonPressed);
+                var buttonPressed;
+                //e.which returns 0 for esc, tab and some other keys. in this key check keyCode
+                if (e.which == 0) {
+                    buttonPressed = _.find(buttons, function (button) {
+                        return button.keyCode == e.keyCode;
+                    });
+                } else {
+                    buttonPressed = _.find(buttons, function (button) {
+                        return button.keyWhich == e.which;
+                    });
+                }
+
+                console.log(buttonPressed);
+                if (buttonPressed != undefined) {
+                    handleButtonPressed(buttonPressed);
+                }
             });
         };
 
 
         displayCalculator();
         init();
-        $('#lcdDisplay').focus();
+        $('#lcdTopDisplay').focus();
         return this;
     };
-})
-    (jQuery);
+})(jQuery);
