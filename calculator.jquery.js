@@ -2,6 +2,7 @@
     $.fn.calculator = function () {
         var self = this;
         var MAX_DIGIT = 16;
+        var wasLastButtonPressedOperand = false;
 
         var buttons = [
             {id:'escape', value:'AC', type:'button', classs:'func', keyCode:27, title:'Esc'},
@@ -45,8 +46,7 @@
             console.log(expressionInString);
             expressionInString = expressionInString.replace(lastOperatorRegex, '');
             var result = eval(expressionInString);
-            
-            return ;
+            return result;
         }
 
         function displayCalculator() {
@@ -88,9 +88,10 @@
             switch (buttonObject.value) {
                 case '=':
                     //evaluate the expression
-                    newBottomDisplayContent = calculate(currentTopDisplayContent);
+                    newBottomDisplayContent = calculate(currentTopDisplayContent + currentBottomDisplayContent);
                     newTopDisplayContent = '';
                     newTransaction = true;
+                    wasLastButtonPressedOperand = true;
                     break;
                 case '1':
                 case '2':
@@ -117,36 +118,47 @@
                     if (currentBottomDisplayContent == '0') {
                         newBottomDisplayContent = buttonObject.value;
                     } else {
+
                         newTopDisplayContent = currentTopDisplayContent;
-                        newBottomDisplayContent = currentBottomDisplayContent + buttonObject.value;
+                        if(wasLastButtonPressedOperand == true){
+                            newBottomDisplayContent = buttonObject.value;
+                        }else{
+                            newBottomDisplayContent = currentBottomDisplayContent + buttonObject.value;
+                        }
+
                     }
+                    wasLastButtonPressedOperand = false;
                     break;
                 case '.':
                     newBottomDisplayContent = currentBottomDisplayContent + buttonObject.value;
+                    wasLastButtonPressedOperand = false;
                     break;
                 case '/':
-                    console.log(currentTopDisplayContent);
-                    console.log(currentBottomDisplayContent);
                     console.log(buttonObject.value);
                     newTopDisplayContent = currentTopDisplayContent + currentBottomDisplayContent + buttonObject.value;
                     newBottomDisplayContent = calculate(newTopDisplayContent);
+                    wasLastButtonPressedOperand = true;
                     break;
                 case '*':
                     newTopDisplayContent = currentTopDisplayContent + currentBottomDisplayContent + buttonObject.value;
                     newBottomDisplayContent = calculate(newTopDisplayContent);
+                    wasLastButtonPressedOperand = true;
                     break;
                 case '+':
                     newTopDisplayContent = currentTopDisplayContent + currentBottomDisplayContent + buttonObject.value;
                     newBottomDisplayContent = calculate(newTopDisplayContent);
+                    wasLastButtonPressedOperand = true;
                     break;
                 case '-':
                     newTopDisplayContent = currentTopDisplayContent + currentBottomDisplayContent + buttonObject.value;
                     newBottomDisplayContent = calculate(newTopDisplayContent);
+                    wasLastButtonPressedOperand = true;
                     break;
                 case '<-':
                     //BACK button pressed, remove a char from right
                     var lastDigitRegex = new RegExp('\\d\\D*$');
                     newBottomDisplayContent = currentBottomDisplayContent.replace(lastDigitRegex, '');
+                    wasLastButtonPressedOperand = true;
                     break;
                 case 'AC':
                     newTopDisplayContent = '';
