@@ -5,33 +5,33 @@
         var wasLastButtonPressedOperand = false;
 
         var buttons = [
-            {id:'escape', value:'AC', type:'button', classs:'func', keyCode:27, title:'Esc'},
-            {id:'square', value:'Sq', type:'button', classs:'func', keyWhich:null},
-            {id:'squareRoot', value:'SqRt', type:'button', classs:'func', keyWhich:null},
-            {id:'back', value:'<-', type:'button', classs:'func', keyWhich:8, title:'Backspace'},
+            {id:'escape', value:'AC', type:'button', classs:'func', keyDownWhich:[27], title:'Esc'},
+            {id:'square', value:'Sq', type:'button', classs:'func', keyDownWhich:[]},
+            {id:'squareRoot', value:'SqRt', type:'button', classs:'func', keyDownWhich:[]},
+            {id:'back', value:'Back', type:'button', classs:'func', keyDownWhich:[8], title:'Backspace'},
 
-            {id:'seven', value:'7', type:'button', classs:'reg', keyWhich:55},
-            {id:'eight', value:'8', type:'button', classs:'reg', keyWhich:56},
-            {id:'nine', value:'9', type:'button', classs:'reg', keyWhich:57},
-            {id:'divide', value:'/', type:'button', classs:'reg', keyWhich:47},
+            {id:'seven', value:'7', type:'button', classs:'reg', keyDownWhich:[103, 55]},
+            {id:'eight', value:'8', type:'button', classs:'reg', keyDownWhich:[104, 56]},
+            {id:'nine', value:'9', type:'button', classs:'reg', keyDownWhich:[105, 57]},
+            {id:'divide', value:'/', type:'button', classs:'reg', keyDownWhich:[111, 191]},
 
-            {id:'four', value:'4', type:'button', classs:'reg', keyWhich:52},
-            {id:'five', value:'5', type:'button', classs:'reg', keyWhich:53},
-            {id:'six', value:'6', type:'button', classs:'reg', keyWhich:54},
-            {id:'multiply', value:'*', type:'button', classs:'reg', keyWhich:42},
+            {id:'four', value:'4', type:'button', classs:'reg', keyDownWhich:[100, 52]},
+            {id:'five', value:'5', type:'button', classs:'reg', keyDownWhich:[101, 53]},
+            {id:'six', value:'6', type:'button', classs:'reg', keyDownWhich:[102, 54]},
+            {id:'multiply', value:'*', type:'button', classs:'reg', keyDownWhich:[106, 56]},
 
-            {id:'one', value:'1', type:'button', classs:'reg', keyWhich:49},
-            {id:'two', value:'2', type:'button', classs:'reg', keyWhich:50},
-            {id:'three', value:'3', type:'button', classs:'reg', keyWhich:51},
-            {id:'subtract', value:'-', type:'button', classs:'reg', keyWhich:45},
+            {id:'one', value:'1', type:'button', classs:'reg', keyDownWhich:[97, 49]},
+            {id:'two', value:'2', type:'button', classs:'reg', keyDownWhich:[98, 50]},
+            {id:'three', value:'3', type:'button', classs:'reg', keyDownWhich:[99, 51]},
+            {id:'subtract', value:'-', type:'button', classs:'reg', keyDownWhich:[109, 189]},
 
-            {id:'zero', value:'0', type:'button', classs:'reg', keyWhich:48},
-            {id:'dot', value:'.', type:'button', classs:'reg', keyWhich:46},
-            {id:'equal', value:'=', type:'button', classs:'reg', keyWhich:13},
-            {id:'add', value:'+', type:'button', classs:'reg', keyWhich:43}
+            {id:'zero', value:'0', type:'button', classs:'reg', keyDownWhich:[96, 48]},
+            {id:'dot', value:'.', type:'button', classs:'reg', keyDownWhich:[110, 190]},
+            {id:'equal', value:'=', type:'button', classs:'reg', keyDownWhich:[13]},
+            {id:'add', value:'+', type:'button', classs:'reg', keyDownWhich:[107, 187]}
         ];
 
-        function trimNumber(expressionInString){
+        function trimNumber(expressionInString) {
             var zerosInFront = new RegExp('^0+');
             var ret;
             ret = expressionInString.replace(zerosInFront, '');
@@ -43,7 +43,7 @@
             //if expression ends with + - / *, remove it
             var lastOperatorRegex = new RegExp('[+-/*]$');
 
-            console.log(expressionInString);
+            //console.log(expressionInString);
             expressionInString = expressionInString.replace(lastOperatorRegex, '');
             var result = eval(expressionInString);
             return result;
@@ -85,7 +85,9 @@
             var currentBottomDisplayContent = $('#lcdBottomDisplay').val();
             var newTopDisplayContent, newBottomDisplayContent = '';
             var newTransaction = false;
+
             switch (buttonObject.value) {
+
                 case '=':
                     //evaluate the expression
                     newBottomDisplayContent = calculate(currentTopDisplayContent + currentBottomDisplayContent);
@@ -120,9 +122,9 @@
                     } else {
 
                         newTopDisplayContent = currentTopDisplayContent;
-                        if(wasLastButtonPressedOperand == true){
+                        if (wasLastButtonPressedOperand == true) {
                             newBottomDisplayContent = buttonObject.value;
-                        }else{
+                        } else {
                             newBottomDisplayContent = currentBottomDisplayContent + buttonObject.value;
                         }
 
@@ -134,7 +136,6 @@
                     wasLastButtonPressedOperand = false;
                     break;
                 case '/':
-                    console.log(buttonObject.value);
                     newTopDisplayContent = currentTopDisplayContent + currentBottomDisplayContent + buttonObject.value;
                     newBottomDisplayContent = calculate(newTopDisplayContent);
                     wasLastButtonPressedOperand = true;
@@ -154,22 +155,25 @@
                     newBottomDisplayContent = calculate(newTopDisplayContent);
                     wasLastButtonPressedOperand = true;
                     break;
-                case '<-':
+                case 'Back':
                     //BACK button pressed, remove a char from right
                     var lastDigitRegex = new RegExp('\\d\\D*$');
                     newBottomDisplayContent = currentBottomDisplayContent.replace(lastDigitRegex, '');
-                    wasLastButtonPressedOperand = true;
+                    wasLastButtonPressedOperand = false;
                     break;
                 case 'AC':
                     newTopDisplayContent = '';
                     newBottomDisplayContent = '0';
                     break;
                 case 'Sq':
+                    newTopDisplayContent = 'Square(' + currentBottomDisplayContent + ')';
                     newBottomDisplayContent = currentBottomDisplayContent * currentBottomDisplayContent;
-                    newTopDisplayContent = 'Square('+ currentTopDisplayContent +')';
+                    wasLastButtonPressedOperand = true;
                     break;
                 case 'SqRt':
+                    newTopDisplayContent = 'SquareRoot(' + currentBottomDisplayContent + ')';
                     newBottomDisplayContent = Math.sqrt(currentBottomDisplayContent);
+                    wasLastButtonPressedOperand = true;
                     break;
                 default:
                     console.log('invalid key');
@@ -197,20 +201,17 @@
                 $('#lcdTopDisplay').focus();
             });
 
-            $('#calculator input').keypress(function (e) {
+            $('#calculator input').keydown(function (e) {
                 var buttonPressed;
-                //e.which returns 0 for esc, tab and some other keys. in this key check keyCode
-                if (e.which == 0) {
-                    buttonPressed = _.find(buttons, function (button) {
-                        return button.keyCode == e.keyCode;
-                    });
-                } else {
-                    buttonPressed = _.find(buttons, function (button) {
-                        return button.keyWhich == e.which;
-                    });
-                }
 
-                console.log(buttonPressed);
+                //e.which returns 0 for esc, tab and some other keys. in this key check keyCode
+                buttonPressed = _.find(buttons, function (button) {
+                    if (_.contains(button.keyDownWhich, e.which)) {
+                        return button;
+                    }
+                });
+                console.log(e.which + '-->' + buttonPressed.value);
+
                 if (buttonPressed != undefined) {
                     handleButtonPressed(buttonPressed);
                 }
