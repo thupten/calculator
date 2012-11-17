@@ -1,0 +1,20 @@
+<html>
+<head></head>
+<body>
+<script>
+var expression = '10/20/5+5/20-5/45';
+var regex = new RegExp('(\\d+)/(\\d+)');
+
+var matchDivision = divisionRegex.exec(expression);
+console.log(matchDivision);
+
+while(matchDivision != null){
+    tmpresult = matchDivision[1]/matchDivision[2];
+    expression = expression.replace(divisionRegex, tmpresult);
+	console.log(expression);
+    matchDivision = divisionRegex.exec(expression);
+    console.log(matchDivision);
+}
+</script>
+</body>
+</html>

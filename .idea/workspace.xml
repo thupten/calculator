@@ -25,10 +25,10 @@
     <splitter split-orientation="horizontal" split-proportion="0.590933">
       <split-first>
         <leaf>
-          <file leaf-file-name="calculator.jquery.js" pinned="false" current="false" current-in-tab="true">
+          <file leaf-file-name="calculator.jquery.js" pinned="false" current="true" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/calculator.jquery.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state line="19" column="87" selection-start="1192" selection-end="1192" vertical-scroll-proportion="0.019585254">
+                <state line="51" column="100" selection-start="2983" selection-end="2983" vertical-scroll-proportion="0.6267281">
                   <folding />
                 </state>
               </provider>
@@ -38,7 +38,7 @@
       </split-first>
       <split-second>
         <leaf>
-          <file leaf-file-name="index.html" pinned="false" current="true" current-in-tab="true">
+          <file leaf-file-name="index.html" pinned="false" current="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/index.html">
               <provider selected="true" editor-type-id="text-editor">
                 <state line="1" column="0" selection-start="16" selection-end="16" vertical-scroll-proportion="0.01988304">
@@ -71,8 +71,8 @@
         <option value="$PROJECT_DIR$/logic" />
         <option value="$PROJECT_DIR$/README" />
         <option value="$PROJECT_DIR$/calculator.jquery.css" />
-        <option value="$PROJECT_DIR$/calculator.jquery.js" />
         <option value="$PROJECT_DIR$/index.html" />
+        <option value="$PROJECT_DIR$/calculator.jquery.js" />
       </list>
     </option>
   </component>
@@ -108,6 +108,7 @@
       <sortByType />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -128,7 +129,6 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -136,8 +136,8 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="options.lastSelected" value="preferences.editor" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../Formbehavior" />
-    <property name="options.searchVisible" value="true" />
     <property name="options.splitter.details.proportions" value="0.2" />
+    <property name="options.searchVisible" value="true" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -351,16 +351,16 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/calculator.jquery.js">
+    <entry file="file://$PROJECT_DIR$/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="19" column="87" selection-start="1192" selection-end="1192" vertical-scroll-proportion="0.019585254">
+        <state line="1" column="0" selection-start="16" selection-end="16" vertical-scroll-proportion="0.01988304">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/index.html">
+    <entry file="file://$PROJECT_DIR$/calculator.jquery.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="1" column="0" selection-start="16" selection-end="16" vertical-scroll-proportion="0.01988304">
+        <state line="51" column="100" selection-start="2983" selection-end="2983" vertical-scroll-proportion="0.6267281">
           <folding />
         </state>
       </provider>
