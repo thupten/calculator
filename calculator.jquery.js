@@ -136,29 +136,39 @@
                     wasLastButtonPressedOperand = false;
                     break;
                 case '/':
-                    newTopDisplayContent = currentTopDisplayContent + currentBottomDisplayContent + buttonObject.value;
-                    newBottomDisplayContent = calculate(newTopDisplayContent);
-                    wasLastButtonPressedOperand = true;
+				case '*':
+				case '+':
+				case '-':
+                    if(currentTopDisplayContent == '' && currentBottomDisplayContent != ''){
+						//user likes to continue operating on previous result.
+						newTopDisplayContent = currentBottomDisplayContent + buttonObject.value;
+						wasLastButtonPressedOperand = true;
+						break;
+					}
+					if(wasLastButtonPressedOperand != true){
+						newTopDisplayContent = currentTopDisplayContent + currentBottomDisplayContent + buttonObject.value;
+					}else{
+						//two operands pressed consecutively, last operand overwrites older operand. eg. if user press 2*/2, divide rules.
+						//replace last operand with new operand
+						newTopDisplayContent = currentTopDisplayContent.replace(new RegExp('.$'), buttonObject.value);
+					}
+					console.log('calculating next ..' + newTopDisplayContent);
+					newBottomDisplayContent = calculate(newTopDisplayContent);
+					wasLastButtonPressedOperand = true;
                     break;
-                case '*':
-                    newTopDisplayContent = currentTopDisplayContent + currentBottomDisplayContent + buttonObject.value;
-                    newBottomDisplayContent = calculate(newTopDisplayContent);
-                    wasLastButtonPressedOperand = true;
-                    break;
-                case '+':
-                    newTopDisplayContent = currentTopDisplayContent + currentBottomDisplayContent + buttonObject.value;
-                    newBottomDisplayContent = calculate(newTopDisplayContent);
-                    wasLastButtonPressedOperand = true;
-                    break;
-                case '-':
-                    newTopDisplayContent = currentTopDisplayContent + currentBottomDisplayContent + buttonObject.value;
-                    newBottomDisplayContent = calculate(newTopDisplayContent);
-                    wasLastButtonPressedOperand = true;
-                    break;
+				
+                
+                    
                 case 'Back':
                     //BACK button pressed, remove a char from right
-                    var lastDigitRegex = new RegExp('\\d\\D*$');
-                    newBottomDisplayContent = currentBottomDisplayContent.replace(lastDigitRegex, '');
+					console.log(wasLastButtonPressedOperand);
+                    if(wasLastButtonPressedOperand == true){
+						newTopDisplayContent = currentTopDisplayContent.replace(new RegExp('.$'),'');
+						newBottomDisplayContent = currentBottomDisplayContent;
+					}else{
+						var lastDigitRegex = new RegExp('\\d\\D*$');
+						newBottomDisplayContent = currentBottomDisplayContent.replace(lastDigitRegex, '');
+					}
                     wasLastButtonPressedOperand = false;
                     break;
                 case 'AC':
