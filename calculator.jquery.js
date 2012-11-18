@@ -41,12 +41,37 @@
 
         function calculate(expressionInString) {
             //if expression ends with + - / *, remove it
+            var expression = expressionInString;
             var lastOperatorRegex = new RegExp('[+-/*]$');
+            expression = expression.replace(lastOperatorRegex, '');
 
-            //console.log(expressionInString);
-            expressionInString = expressionInString.replace(lastOperatorRegex, '');
-            var result = eval(expressionInString);
+            //find all division sign and then find left and right operator, do a division and replace with the result.
+            // keep doing this until no division left. ..then move to multiply, add and then subtract.
+            var divisionRegex = new RegExp('(\d+)/(\d+)');
+            var matchDivision = divisionRegex.exec(expression);
+            expression = expression.replace(divisionRegex, divide(matchDivision[1], matchDivision[2]));
+
+
+            var result = eval(expression);
             return result;
+
+
+        }
+
+        function multiply(x, y) {
+            return x * y;
+        }
+
+        function divide(nominator, denominator) {
+            return nominator / denominator;
+        }
+
+        function add(x, y) {
+            return x + y;
+        }
+
+        function subtract(from, value) {
+            return from - value;
         }
 
         function displayCalculator() {
@@ -136,29 +161,38 @@
                     wasLastButtonPressedOperand = false;
                     break;
                 case '/':
-                    newTopDisplayContent = currentTopDisplayContent + currentBottomDisplayContent + buttonObject.value;
-                    newBottomDisplayContent = calculate(newTopDisplayContent);
-                    wasLastButtonPressedOperand = true;
-                    break;
                 case '*':
-                    newTopDisplayContent = currentTopDisplayContent + currentBottomDisplayContent + buttonObject.value;
-                    newBottomDisplayContent = calculate(newTopDisplayContent);
-                    wasLastButtonPressedOperand = true;
-                    break;
                 case '+':
-                    newTopDisplayContent = currentTopDisplayContent + currentBottomDisplayContent + buttonObject.value;
-                    newBottomDisplayContent = calculate(newTopDisplayContent);
-                    wasLastButtonPressedOperand = true;
-                    break;
                 case '-':
-                    newTopDisplayContent = currentTopDisplayContent + currentBottomDisplayContent + buttonObject.value;
+                    if (currentTopDisplayContent == '' && currentBottomDisplayContent != '') {
+                        //user likes to continue operating on previous result.
+                        newTopDisplayContent = currentBottomDisplayContent + buttonObject.value;
+                        wasLastButtonPressedOperand = true;
+                        break;
+                    }
+                    if (wasLastButtonPressedOperand != true) {
+                        newTopDisplayContent = currentTopDisplayContent + currentBottomDisplayContent + buttonObject.value;
+                    } else {
+                        //two operands pressed consecutively, last operand overwrites older operand. eg. if user press 2*/2, divide rules.
+                        //replace last operand with new operand
+                        newTopDisplayContent = currentTopDisplayContent.replace(new RegExp('.$'), buttonObject.value);
+                    }
+                    console.log('calculating next ..' + newTopDisplayContent);
                     newBottomDisplayContent = calculate(newTopDisplayContent);
                     wasLastButtonPressedOperand = true;
                     break;
+
+
                 case 'Back':
                     //BACK button pressed, remove a char from right
-                    var lastDigitRegex = new RegExp('\\d\\D*$');
-                    newBottomDisplayContent = currentBottomDisplayContent.replace(lastDigitRegex, '');
+                    console.log(wasLastButtonPressedOperand);
+                    if (wasLastButtonPressedOperand == true) {
+                        newTopDisplayContent = currentTopDisplayContent.replace(new RegExp('.$'), '');
+                        newBottomDisplayContent = currentBottomDisplayContent;
+                    } else {
+                        var lastDigitRegex = new RegExp('\\d\\D*$');
+                        newBottomDisplayContent = currentBottomDisplayContent.replace(lastDigitRegex, '');
+                    }
                     wasLastButtonPressedOperand = false;
                     break;
                 case 'AC':
