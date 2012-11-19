@@ -45,34 +45,60 @@
             var lastOperatorRegex = new RegExp('[+-/*]$');
             expression = expression.replace(lastOperatorRegex, '');
 
-            //find all division sign and then find left and right operator, do a division and replace with the result.
-            // keep doing this until no division left. ..then move to multiply, add and then subtract.
-            var divisionRegex = new RegExp('(\d+)/(\d+)');
-            var matchDivision = divisionRegex.exec(expression);
-            expression = expression.replace(divisionRegex, divide(matchDivision[1], matchDivision[2]));
+            //var expression = '1.11+2.22+3.33+4.44+5.55';
+            var regExps = [
+                new RegExp('(\\d+\\.\\d+|\\d+)/(\\d+\\.\\d+|\\d+)'),
+                new RegExp('(\\d+\\.\\d+|\\d+)\\*(\\d+\\.\\d+|\\d+)'),
+                new RegExp('(\\d+\\.\\d+|\\d+)\\+(\\d+\\.\\d+|\\d+)'),
+                new RegExp('(\\d+\\.\\d+|\\d+)-(\\d+\\.\\d+|\\d+)')
+            ];
+            for (var i = 0; i < regExps.length; i++) {
+                var regexp = regExps[i];
+                while (regexp.test(expression)) {
+                    var matches = regexp.exec(expression);
+                    console.log(matches);
+                    var tmpresult;
+                    switch (i) {
+                        case 0:
+                            tmpresult = parseFloat(matches[1]) / parseFloat(matches[2]);
+                            break;
+                        case 1:
+                            tmpresult = parseFloat(matches[1]) * parseFloat(matches[2]);
+                            break;
+                        case 2:
+                            tmpresult = parseFloat(matches[1]) + parseFloat(matches[2]);
+                            break;
+                        case 3:
+                            tmpresult = parseFloat(matches[1]) - parseFloat(matches[2]);
+                            break;
+                        default:
+                            console.log('unknown regex');
+                    }
+                    console.log(expression);
+                    expression = expression.replace(regexp, tmpresult);
+                }
+                console.log(expression);
+            }
 
-
-            var result = eval(expression);
-            return result;
-
-
-        }
-
-        function multiply(x, y) {
-            return x * y;
-        }
-
-        function divide(nominator, denominator) {
-            return nominator / denominator;
+            return expression;
         }
 
         function add(x, y) {
             return x + y;
         }
 
-        function subtract(from, value) {
-            return from - value;
+        function subtract(from, val) {
+            return from - val;
         }
+
+        function divide(from, val) {
+            return from / val;
+        }
+
+        function multiply(x, y) {
+            return x * y;
+        }
+
 
         function displayCalculator() {
             //add the textbox

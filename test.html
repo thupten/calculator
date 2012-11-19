@@ -2,19 +2,64 @@
 <head></head>
 <body>
 <script>
-var expression = '10/20/5+5/20-5/45';
-var regex = new RegExp('(\\d+)/(\\d+)');
+    var expression = '1.11+2.22+3.33+4.44+5.55';
+    var regExps = [
+        new RegExp('(\\d+\\.\\d+|\\d+)/(\\d+\\.\\d+|\\d+)'),
+        new RegExp('(\\d+\\.\\d+|\\d+)\\*(\\d+\\.\\d+|\\d+)'),
+        new RegExp('(\\d+\\.\\d+|\\d+)\\+(\\d+\\.\\d+|\\d+)'),
+        new RegExp('(\\d+\\.\\d+|\\d+)-(\\d+\\.\\d+|\\d+)')
+    ];
+    for (var i = 0; i < regExps.length; i++) {
+        var regexp = regExps[i];
+        while (regexp.test(expression)) {
+            var matches = regexp.exec(expression);
+            console.log(matches);
+            var tmpresult;
+            switch (i) {
+                case 0:
+                    tmpresult = parseFloat(matches[1]) / parseFloat(matches[2]);
+                    break;
+                case 1:
+                    tmpresult = parseFloat(matches[1]) * parseFloat(matches[2]);
+                    break;
+                case 2:
+                    tmpresult = parseFloat(matches[1]) + parseFloat(matches[2]);
+                    break;
+                case 3:
+                    tmpresult = parseFloat(matches[1]) - parseFloat(matches[2]);
+                    break;
+                default:
+                   console.log('unknown regex');
+            }
+            console.log(expression);
+            expression = expression.replace(regexp, tmpresult);
+        }
+        console.log(expression);
+    }
+    //    var matchDivision = regExps.exec(expression);
+    //    while (matchDivision) {
+    //        console.log(matchDivision[0] + ' ' + matchDivision[1] + ' ' + matchDivision[2]);
+    //        tmpresult = matchDivision[1] / matchDivision[2];
+    //        expression = expression.replace(regExps, tmpresult);
+    //        matchDivision = regExps.exec(expression);
+    //    }
 
-var matchDivision = divisionRegex.exec(expression);
-console.log(matchDivision);
 
-while(matchDivision != null){
-    tmpresult = matchDivision[1]/matchDivision[2];
-    expression = expression.replace(divisionRegex, tmpresult);
-	console.log(expression);
-    matchDivision = divisionRegex.exec(expression);
-    console.log(matchDivision);
-}
+    function add(x, y) {
+        return x + y;
+    }
+
+    function subtract(from, val) {
+        return from - val;
+    }
+
+    function divide(from, val) {
+        return from / val;
+    }
+
+    function multiply(x, y) {
+        return x * y;
+    }
 </script>
 </body>
 </html>

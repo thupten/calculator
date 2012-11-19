@@ -1,39 +1,41 @@
-*{
-    padding: 0;margin:0;
+* {
+    padding: 0;
+    margin: 0;
 }
 
-#calculator{
-    width:200px;
-    background-color:#ccc;
-    border:10px solid #ccc;
+#calculator {
+    width: 200px;
+    background-color: #ccc;
+    border: 10px solid #ccc;
 }
 
-
-#calculator input{
-    font-size:21px;
-    color:#666;
+#calculator input {
+    font-size: 21px;
+    color: #666;
 }
 
-#calculator input.reg{
-    width:50px;
-    height:50px;
+#calculator input.reg {
+    width: 50px;
+    height: 50px;
 }
 
-#calculator input.func{
-    font-size:16px;
-    font-weight:bold;
-    width:50px;
-    height:50px;
+#calculator input.func {
+    font-size: 16px;
+    font-weight: bold;
+    width: 50px;
+    height: 50px;
 }
-#calculator input#lcdTopDisplay{
+
+#calculator input#lcdTopDisplay {
     font-size: 15px;
-    border-bottom:none;
-}
-#lcdBottomDisplay{
-    border-top:none;
+    border-bottom: none;
 }
 
-#lcdTopDisplay, #lcdBottomDisplay{
-    width:200px;
+#lcdBottomDisplay {
+    border-top: none;
+}
+
+#lcdTopDisplay, #lcdBottomDisplay {
+    width: 200px;
     text-align: right;
 }
