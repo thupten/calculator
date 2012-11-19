@@ -41,47 +41,36 @@
 
         function calculate(expressionInString) {
             //if expression ends with + - / *, remove it
+            //calculate first in first out..not bodmas
             var expression = expressionInString;
             var lastOperatorRegex = new RegExp('[+-/*]$');
             expression = expression.replace(lastOperatorRegex, '');
 
-            //var expression = '1.11+2.22+3.33+4.44+5.55';
-            var regExps = [
-                new RegExp('(\\d+\\.\\d+|\\d+)/(\\d+\\.\\d+|\\d+)'),
-                new RegExp('(\\d+\\.\\d+|\\d+)\\*(\\d+\\.\\d+|\\d+)'),
-                new RegExp('(\\d+\\.\\d+|\\d+)\\+(\\d+\\.\\d+|\\d+)'),
-                new RegExp('(\\d+\\.\\d+|\\d+)-(\\d+\\.\\d+|\\d+)')
-            ];
-            for (var i = 0; i < regExps.length; i++) {
-                var regexp = regExps[i];
-                while (regexp.test(expression)) {
-                    var matches = regexp.exec(expression);
-                    console.log(matches);
-                    var tmpresult;
-                    switch (i) {
-                        case 0:
-                            tmpresult = parseFloat(matches[1]) / parseFloat(matches[2]);
-                            break;
-                        case 1:
-                            tmpresult = parseFloat(matches[1]) * parseFloat(matches[2]);
-                            break;
-                        case 2:
-                            tmpresult = parseFloat(matches[1]) + parseFloat(matches[2]);
-                            break;
-                        case 3:
-                            tmpresult = parseFloat(matches[1]) - parseFloat(matches[2]);
-                            break;
-                        default:
-                            console.log('unknown regex');
-                    }
-                    console.log(expression);
-                    expression = expression.replace(regexp, tmpresult);
+            var regexp = new RegExp('(\\d+\\.\\d+|\\d+)([/*+-])(\\d+\\.\\d+|\\d+)');
+            while (regexp.test(expression)) {
+                var matches = regexp.exec(expression);
+                var tmpResult;
+                switch (matches[2]) {
+                    case '/':
+                        tmpResult = parseFloat(matches[1]) / parseFloat(matches[3]);
+                        break;
+                    case '*':
+                        tmpResult = parseFloat(matches[1]) * parseFloat(matches[3]);
+                        break;
+                    case '+':
+                        tmpResult = parseFloat(matches[1]) + parseFloat(matches[3]);
+                        break;
+                    case '-':
+                        tmpResult = parseFloat(matches[1]) - parseFloat(matches[3]);
+                        break;
+                    default:
+                        console.log('unknown regex');
                 }
-                console.log(expression);
+                expression = expression.replace(regexp, tmpResult);
             }
-
             return expression;
         }
+
 
         function add(x, y) {
             return x + y;
