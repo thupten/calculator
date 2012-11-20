@@ -1,5 +1,6 @@
 (function ($) {
     $.fn.calculator = function () {
+        $this  = $(this);
         var self = this;
         var MAX_DIGIT = 16;
         var wasLastButtonPressedOperand = false;
@@ -228,14 +229,14 @@
                     console.log('invalid key');
             }
             var $buttonToHighlight = 'input[value="' + buttonObject.value + '"]';
-            var $button = $('#calculator').find($buttonToHighlight).fadeOut(20).fadeIn(20);
+            var $button = $this.find($buttonToHighlight).fadeOut(20).fadeIn(20);
             $('#lcdTopDisplay').val(newTopDisplayContent);
             $('#lcdBottomDisplay').val(newBottomDisplayContent);
         }
 
         var init = function () {
             //add handlers for the buttons
-            $('#calculator input[type=button]').bind('click', function () {
+            $this.find('input[type=button]').bind('click', function () {
                 var valueOfKeyPressed = this.value;
                 var buttonPressed = _.find(buttons, function (button) {
                     return button.value == valueOfKeyPressed;
@@ -246,11 +247,11 @@
             });
 
             //any time a button is pressed, change the focus back to the lcd display
-            $('#calculator input').bind('click', function () {
+            $this.find('input').bind('click', function () {
                 $('#lcdTopDisplay').focus();
             });
 
-            $('#calculator input').keydown(function (e) {
+            $this.find('input').keydown(function (e) {
                 var buttonPressed;
 
                 //e.which returns 0 for esc, tab and some other keys. in this key check keyCode
